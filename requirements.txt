@@ -1,5 +1,6 @@
-curation_utils
-doc_curation
-indic_transliteration
 editdistance
 methodtools
+indic_transliteration
+sanskrit_data
+curation_utils
+doc_curation
