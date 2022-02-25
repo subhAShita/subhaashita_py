@@ -12,7 +12,6 @@ PATH_DB_SA = "/home/vvasuki/sanskrit/raw_etexts/kAvyam/padyam/subhAShitam/db_tom
 PATH_SRB = "/home/vvasuki/vishvAsa/kAvyam/content/laxyam/padyam/subhAShitam/subhAShita-ratna-bhANDAgAram/"
 
 
-
 def dump_mss():
   quotes = importer.import_from_mss_tsv(tsv_path="/home/vvasuki/sanskrit/raw_etexts/mixed/gretil_devanAgarI/5_poetry/5_subhas/mahA-subhAShita-sangraha_1_per_line_dev.tsv")
   toml_md_db.add(quotes, base_path=PATH_DB_SA)
