@@ -5,7 +5,7 @@ from doc_curation.md.file import MdFile
 
 from subhaashita import importer, Quote
 from subhaashita.db import toml_md_db
-from subhaashita.importer import subhaashita_ratna_bhaandaagaara
+from subhaashita.importer import subhaashita_ratna_bhaandaagaara, google_sheet
 from indic_transliteration import sanscript
 
 PATH_DB_SA = "/home/vvasuki/sanskrit/raw_etexts/kAvyam/padyam/subhAShitam/db_toml_md__sa__padya"
@@ -47,9 +47,15 @@ def dump_dir():
   importer.empty_import_dir(IMPORT_DIR)
 
 
+def dump_sheets():
+  quotes = google_sheet.import_all(worksheet_name="सं-पद्यानि")
+  toml_md_db.add(quotes, base_path=PATH_DB_SA)
+
+
 if __name__ == '__main__':
   # dump_mss()
   # dump_srb()
   # prep_srb()
-  dump_dir()
+  # dump_dir()
+  dump_sheets()
   pass

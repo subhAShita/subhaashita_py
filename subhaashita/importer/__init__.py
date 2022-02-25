@@ -9,6 +9,12 @@ from subhaashita import Subhaashita
 from indic_transliteration import sanscript
 
 
+def clean_devanaagarii(text):
+  text = text.replace(":", "ः").replace("|", "।").replace("।।", "॥")
+  text = regex.sub("॥ *[०-९- ]+ *॥", "॥", text)
+  return text
+
+
 def is_non_template_file(x):
   return not os.path.basename(x).startswith("_")
 
