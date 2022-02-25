@@ -1,4 +1,5 @@
 import logging
+import os
 import sys
 import textwrap
 
@@ -6,13 +7,10 @@ import methodtools
 import regex
 from bs4 import BeautifulSoup
 from curation_utils import file_helper
+from doc_curation import text_utils
+from indic_transliteration import deduplication, sanscript
 from sanskrit_data.schema import common
 from sanskrit_data.schema.common import JsonObject
-
-from doc_curation import text_utils
-from doc_curation.md.file import MdFile
-from indic_transliteration import deduplication, sanscript
-
 
 
 class Commentary(JsonObject):
@@ -108,15 +106,18 @@ class Quote(JsonObject):
     return obj
 
   @classmethod
-  def from_metadata_md_file(cls, file_path):
-    md_file = MdFile(file_path=file_path)
+  def from_metadata_md_file(cls, md_file, delete_file=False):
     (metadata, md) = md_file.read()
-    return Quote.from_metadata_md(metadata=metadata, md=md)
+    quote = Quote.from_metadata_md(metadata=metadata, md=md)
+    if delete_file:
+      os.remove(path=md_file.file_path)
+    return quote
 
 
 class Subhaashita(Quote):
   def __init__(self, variants, topics=None, sources=None, secondary_sources=None, commentaries=None, types=None, ratings=None, ornaments=None, rasas=None, bhaavas=None, meters=None, script=sanscript.DEVANAGARI):
     super(Subhaashita, self).__init__(variants=variants, topics=topics, sources=sources, secondary_sources=secondary_sources, commentaries=commentaries, types=types, ratings=ratings, ornaments=ornaments, rasas=rasas, bhaavas=bhaavas, meters=meters)
+    # Note: This constructor is not called when the object is automatically constructed from a dict.
     self._script=script
 
   def get_key(self, max_length=MAX_KEY_LENGTH):

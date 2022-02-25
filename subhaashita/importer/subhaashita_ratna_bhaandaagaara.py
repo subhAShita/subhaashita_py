@@ -1,11 +1,9 @@
-import os
-
 import regex
-from indic_transliteration import sanscript
-
 from doc_curation.md import library, content_processor
 from doc_curation.md.content_processor import patterns
-from doc_curation.subhaashita import Subhaashita
+from indic_transliteration import sanscript
+
+from subhaashita import Subhaashita
 
 
 def from_file(md_file, deduce_from_title="topics"):

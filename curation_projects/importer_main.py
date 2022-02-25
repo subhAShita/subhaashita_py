@@ -3,13 +3,14 @@ import os
 from doc_curation.md import library
 from doc_curation.md.file import MdFile
 
-from subhaashita import importer
+from subhaashita import importer, Quote
 from subhaashita.db import toml_md_db
 from subhaashita.importer import subhaashita_ratna_bhaandaagaara
 from indic_transliteration import sanscript
 
 PATH_DB_SA = "/home/vvasuki/sanskrit/raw_etexts/kAvyam/padyam/subhAShitam/db_toml_md__sa__padya"
 PATH_SRB = "/home/vvasuki/vishvAsa/kAvyam/content/laxyam/padyam/subhAShitam/subhAShita-ratna-bhANDAgAram/"
+IMPORT_DIR = os.path.join(PATH_DB_SA, "to_import")
 
 
 def dump_mss():
@@ -40,8 +41,15 @@ def dump_srb():
   pass
 
 
+def dump_dir():
+  quotes_dict = library.apply_function(fn=Quote.from_metadata_md_file, dir_path=IMPORT_DIR, file_name_filter=lambda x: not os.path.basename(x).startswith("_"))
+  toml_md_db.add(quotes_dict.values(), base_path=PATH_DB_SA)
+  importer.empty_import_dir(IMPORT_DIR)
+
+
 if __name__ == '__main__':
   # dump_mss()
-  dump_srb()
+  # dump_srb()
   # prep_srb()
+  dump_dir()
   pass

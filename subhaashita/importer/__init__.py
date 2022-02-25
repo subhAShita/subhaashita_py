@@ -3,14 +3,22 @@ import sys
 
 import pandas
 import regex
+from doc_curation.md import library
 
 from subhaashita import Subhaashita
 from indic_transliteration import sanscript
 
 
+def is_non_template_file(x):
+  return not os.path.basename(x).startswith("_")
 
-def import_from_dir(dir_path):
-  pass
+
+def empty_import_dir(dir_path):
+  from pathlib import Path
+  # logging.debug(list(Path(dir_path).glob(file_pattern)))
+  md_file_paths = sorted(filter(is_non_template_file, Path(dir_path).glob("**/*.md")))
+  for file_path in md_file_paths:
+    os.remove(file_path)
 
 
 def import_from_mss_tsv(tsv_path):

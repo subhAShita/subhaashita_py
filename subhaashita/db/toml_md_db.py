@@ -19,7 +19,7 @@ def add(quotes, base_path, dry_run=False):
     (metadata, md) = quote.to_metadata_md()
     file_path = os.path.join(dir_path, key + ".md")
     while os.path.exists(file_path):
-      quote_old = subhaashita.Quote.from_metadata_md_file(file_path=file_path)
+      quote_old = subhaashita.Quote.from_metadata_md_file(MdFile(file_path=file_path))
       quote_keys = quote.get_variant_keys()
       quote_old_keys = quote_old.get_variant_keys()
       distance = min([editdistance.eval(quote_keys[0], quote_old_key) / float(max(len(quote_keys[0]), len(quote_old_key))) for quote_old_key in quote_old_keys]) 
