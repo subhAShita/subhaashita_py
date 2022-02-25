@@ -83,7 +83,7 @@ class Quote(JsonObject):
   def to_metadata_md(self):
     metadata = self.to_json_map()
     metadata["title"] = self.make_title()
-    commentaries = metadata.pop('commentaries', {})
+    commentaries = self._commentaries
     commentary_order = [CommentaryKey.VISH, "MT"]
     commentaries_sorted = [Commentary(name=name, content=commentary) for name, commentary in commentaries.items() if name in commentary_order]
     commentaries_sorted.extend([Commentary(name=name, content=commentary) for name, commentary in commentaries.items() if name not in commentary_order])
