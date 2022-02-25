@@ -1,8 +1,8 @@
 import os
 
-from doc_curation import subhaashita
-from doc_curation.subhaashita import Subhaashita
-from doc_curation.subhaashita.db import toml_md_db
+import subhaashita
+from subhaashita import Subhaashita
+from subhaashita.db import toml_md_db
 
 PATH_DB_SA = os.path.join(os.path.dirname(__file__), "data", "corpus")
 
