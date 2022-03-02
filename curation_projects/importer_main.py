@@ -8,9 +8,9 @@ from subhaashita.db import toml_md_db
 from subhaashita.importer import subhaashita_ratna_bhaandaagaara, google_sheet
 from indic_transliteration import sanscript
 
-PATH_DB_SA = "/home/vvasuki/sanskrit/raw_etexts/kAvyam/padyam/subhAShitam/db_toml_md__sa__padya"
+PATH_DB_SA = "/home/vvasuki/sanskrit/raw_etexts/kAvyam/padyam/subhAShitam/db_toml_md__sa__padya/main"
 PATH_SRB = "/home/vvasuki/vishvAsa/kAvyam/content/laxyam/padyam/subhAShitam/subhAShita-ratna-bhANDAgAram/"
-IMPORT_DIR = os.path.join(PATH_DB_SA, "to_import")
+IMPORT_DIR = os.path.join(os.path.dirname(PATH_DB_SA), "to_import")
 
 
 def dump_mss():
@@ -47,6 +47,10 @@ def dump_dir():
   importer.empty_import_dir(IMPORT_DIR)
 
 
+def standardize_all():
+  library.apply_function(fn=toml_md_db.standardize_file, dir_path=PATH_DB_SA, file_name_filter=lambda x: not os.path.basename(x).startswith("_"))
+
+
 def dump_sheets():
   quotes = google_sheet.import_all(worksheet_name="सं-पद्यानि")
   toml_md_db.add(quotes, base_path=PATH_DB_SA)
@@ -56,6 +60,7 @@ if __name__ == '__main__':
   # dump_mss()
   # dump_srb()
   # prep_srb()
+  standardize_all()
   # dump_dir()
-  dump_sheets()
+  # dump_sheets()
   pass

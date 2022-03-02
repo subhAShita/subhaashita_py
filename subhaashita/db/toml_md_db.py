@@ -49,3 +49,41 @@ def add(quotes, base_path, dry_run=False):
         break
     md_file = MdFile(file_path=file_path)
     md_file.dump_to_file(metadata=metadata, content=md, dry_run=dry_run)
+    
+
+def standardize_file(md_file, dry_run=False):
+  quote = subhaashita.Quote.from_metadata_md_file(md_file=md_file)
+  (metadata, md) = quote.to_metadata_md()
+  md_file.dump_to_file(metadata=metadata, content=md, dry_run=dry_run, silent=True)
+
+
+def update_indices(quotes_path, dest_path):
+  quotes_dict = library.apply_function(fn=subhaashita.Quote.from_metadata_md_file, dir_path=quotes_path, file_name_filter=lambda x: not os.path.basename(x).startswith("_"))
+  
+  indices = {}
+
+  def update_dict(dict_d, keys, value):
+    if keys:
+      for key in keys:
+        dict_d.setdefault(key, []).append(value)
+
+  for quote_path, quote in quotes_dict.items():
+    key = os.path.basename(quote_path).replace(".md", "")
+
+    first_letter = quote.get_text()[0]
+    indices.setdefault("first_letter", {}).setdefault(first_letter, []).append(key)
+
+    for attr in ["topics", "sources", "types", "meters", "rasas", "bhaavas", "ornaments"]:
+      update_dict(dict_d=indices.setdefault(attr, {}), keys=getattr(quote, attr), value=key)
+    
+
+  for attr, value_to_quote_keys in indices.items():
+    outfile_path_attr = os.path.join(dest_path, attr)
+    for value, quote_keys in value_to_quote_keys.items():
+      outfile_path = os.path.join(outfile_path_attr, value + ".tsv")
+      with open(outfile_path, "w") as outfile:
+        outfile.write("\n".join(sorted(quote_keys)))
+    outfile_path = os.path.join(outfile_path_attr, "items.tsv")
+    with open(outfile_path, "w") as outfile:
+      outfile.write("\n".join(sorted(value_to_quote_keys.keys())))
+

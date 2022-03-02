@@ -19,13 +19,14 @@ class Commentary(JsonObject):
     self.name = name
     self.content = content
 
-  def to_details_tag(self):
+  def to_details_tag(self, attributes=""):
+    details_tag_start = ("details %s" % attributes).strip()
     return textwrap.dedent("""
-    <details><summary>%s</summary>
+    <%s><summary>%s</summary>
     
     %s
     </details>
-    """) % (self.name, self.content)
+    """) % (details_tag_start, self.name, self.content)
 
 
 HARD_MAX_KEY_LENGTH = 20
@@ -82,10 +83,12 @@ class Quote(JsonObject):
     metadata = self.to_json_map()
     metadata["title"] = self.make_title()
     commentaries = self._commentaries
-    commentary_order = [CommentaryKey.VISH, "MT"]
+    commentary_order = [CommentaryKey.VISH, CommentaryKey.TEXT, "MT"]
     commentaries_sorted = [Commentary(name=name, content=commentary) for name, commentary in commentaries.items() if name in commentary_order]
     commentaries_sorted.extend([Commentary(name=name, content=commentary) for name, commentary in commentaries.items() if name not in commentary_order])
-    detail_elements = [commentary.to_details_tag() for commentary in commentaries_sorted]
+    detail_elements = [commentaries_sorted[0].to_details_tag(attributes="open")]
+    if len(commentaries_sorted) > 1:
+      detail_elements.extend([commentary.to_details_tag(attributes="") for commentary in commentaries_sorted[1:]])
     md = "\n\n".join(detail_elements)
     return (metadata, md)
 
@@ -108,7 +111,11 @@ class Quote(JsonObject):
   @classmethod
   def from_metadata_md_file(cls, md_file, delete_file=False):
     (metadata, md) = md_file.read()
-    quote = Quote.from_metadata_md(metadata=metadata, md=md)
+    try:
+      quote = Quote.from_metadata_md(metadata=metadata, md=md)
+    except ValueError:
+      logging.error("Illegal file contents: %s", md_file.file_path)    
+      sys.exit(-1)
     if delete_file:
       os.remove(path=md_file.file_path)
     return quote

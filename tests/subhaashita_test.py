@@ -1,6 +1,7 @@
 import os
 
 import subhaashita
+from doc_curation.md.file import MdFile
 from subhaashita import Subhaashita
 from subhaashita.db import toml_md_db
 
@@ -30,3 +31,14 @@ def test_add():
   quotes = [Subhaashita(variants=[text])]
   toml_md_db.add(quotes, base_path=PATH_DB_SA)
   assert not os.path.exists(os.path.join(PATH_DB_SA, "e/k/a/e/v/ekaevakhagomAmI.md"))
+
+
+
+
+def test_standardize():
+  md_file = MdFile(file_path=os.path.join(PATH_DB_SA, "k/A/v/e/r/kAverIvAri.md"))
+  (metadata_old, md_old) = md_file.read()
+  toml_md_db.standardize_file(md_file=md_file)
+  (metadata, md) = md_file.read()
+  assert md_old == md
+  assert metadata_old == metadata
