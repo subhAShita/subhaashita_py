@@ -8,7 +8,7 @@ import regex
 from bs4 import BeautifulSoup
 from curation_utils import file_helper
 from doc_curation import text_utils
-from indic_transliteration import deduplication, sanscript
+from indic_transliteration import deduplication, sanscript, detect
 from sanskrit_data.schema import common
 from sanskrit_data.schema.common import JsonObject
 
@@ -106,6 +106,7 @@ class Quote(JsonObject):
     metadata.pop("title", None)
     obj = common.JsonObject.make_from_dict(input_dict=metadata)
     obj._commentaries = commentaries
+    obj._script = detect.detect(commentaries[CommentaryKey.TEXT])
     return obj
 
   @classmethod

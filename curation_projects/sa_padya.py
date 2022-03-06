@@ -48,7 +48,8 @@ def dump_dir():
 
 
 def standardize_all():
-  library.apply_function(fn=toml_md_db.standardize_file, dir_path=PATH_DB_SA, file_name_filter=lambda x: not os.path.basename(x).startswith("_"))
+  # library.apply_function(fn=toml_md_db.standardize_file, dir_path=PATH_DB_SA, file_name_filter=lambda x: not os.path.basename(x).startswith("_"))
+  library.apply_function(fn=toml_md_db.set_meters, dir_path=PATH_DB_SA, file_name_filter=lambda x: not os.path.basename(x).startswith("_"), dry_run=False)
 
 
 def dump_sheets():
@@ -61,6 +62,7 @@ if __name__ == '__main__':
   # dump_srb()
   # prep_srb()
   standardize_all()
+  toml_md_db.update_indices(quotes_path=PATH_DB_SA, dest_path=os.path.join(os.path.dirname(PATH_DB_SA), "index"))
   # dump_dir()
   # dump_sheets()
   pass

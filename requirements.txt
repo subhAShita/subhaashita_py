@@ -4,3 +4,5 @@ indic_transliteration
 sanskrit_data
 curation_utils
 doc_curation
+chandas
+sortedcontainers
