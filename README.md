@@ -2,7 +2,7 @@
 [![Documentation Status](https://readthedocs.org/projects/subhaashita/badge/?version=latest)](http://subhaashita.readthedocs.io/en/latest/?badge=latest)
 [![PyPI version](https://badge.fury.io/py/subhaashita.svg)](https://badge.fury.io/py/subhaashita)
 
-## doc curation
+## Intro
 
 A package for curating subhAShita-s and quotes. 
 

@@ -42,7 +42,7 @@ setup(
     long_description=long_description,
 
     # The project's main homepage.
-    url='https://github.com/sanskrit-coders/doc_curation',
+    url='https://github.com/subhAShita/subhaashita_py',
 
     # Author details
     author='Sanskrit programmers',
