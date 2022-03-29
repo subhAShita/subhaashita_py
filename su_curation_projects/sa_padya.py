@@ -61,8 +61,8 @@ if __name__ == '__main__':
   # dump_mss()
   # dump_srb()
   # prep_srb()
-  standardize_all()
-  toml_md_db.update_indices(quotes_path=PATH_DB_SA, dest_path=os.path.join(os.path.dirname(PATH_DB_SA), "index"))
-  # dump_dir()
+  # standardize_all()
+  # toml_md_db.update_indices(quotes_path=PATH_DB_SA, dest_path=os.path.join(os.path.dirname(PATH_DB_SA), "index"))
+  dump_dir()
   # dump_sheets()
   pass
