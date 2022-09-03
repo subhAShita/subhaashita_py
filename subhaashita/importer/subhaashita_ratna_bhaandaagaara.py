@@ -1,3 +1,5 @@
+import doc_curation.md.content_processor.sanskrit_helper
+import doc_curation.md.content_processor.stripper
 import regex
 from doc_curation.md import library, content_processor
 from doc_curation.md.content_processor import patterns
@@ -9,13 +11,13 @@ from subhaashita import Subhaashita
 def from_file(md_file, deduce_from_title="topics"):
   (metadata, content) = md_file.read()
   full_title = md_file.get_title(ref_dir_for_ancestral_title=PATH_SRB)
-  content = "\n" + content_processor.remove_non_content_text(content=content)
+  content = "\n" + doc_curation.md.content_processor.stripper.remove_non_content_text(content=content)
   matches = regex.findall(patterns.PATTERN_SHLOKA, content)
   quotes = []
   for match in matches:
     source_descriptor = "सुभाषितरत्नभाण्डागारः// %s// %s" % (full_title, match[1])
     text = match[0] + "॥"
-    text = sanscript.SCHEMES[sanscript.DEVANAGARI].fix_lazy_anusvaara(text, omit_sam=True, omit_yrl=True, ignore_padaanta=True)
+    text = doc_curation.md.content_processor.sanskrit_helper.fix_lazy_anusvaara(text, omit_sam=True, omit_yrl=True, ignore_padaanta=True)
     metadata_out = {}
     deduce_metadata(deduce_from_title, metadata_out, metadata)
     
