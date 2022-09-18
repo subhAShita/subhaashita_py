@@ -1,9 +1,8 @@
-import doc_curation.md.content_processor.sanskrit_helper
+import doc_curation.utils.sanskrit_helper
 import doc_curation.md.content_processor.stripper
 import regex
-from doc_curation.md import library, content_processor
-from doc_curation.md.content_processor import patterns
-from indic_transliteration import sanscript
+from doc_curation.md import library
+from doc_curation.utils import patterns
 
 from subhaashita import Subhaashita
 
@@ -17,7 +16,7 @@ def from_file(md_file, deduce_from_title="topics"):
   for match in matches:
     source_descriptor = "सुभाषितरत्नभाण्डागारः// %s// %s" % (full_title, match[1])
     text = match[0] + "॥"
-    text = doc_curation.md.content_processor.sanskrit_helper.fix_lazy_anusvaara(text, omit_sam=True, omit_yrl=True, ignore_padaanta=True)
+    text = doc_curation.utils.sanskrit_helper.fix_lazy_anusvaara(text, omit_sam=True, omit_yrl=True, ignore_padaanta=True)
     metadata_out = {}
     deduce_metadata(deduce_from_title, metadata_out, metadata)
     

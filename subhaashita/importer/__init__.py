@@ -1,10 +1,8 @@
 import os
-import sys
 
-import doc_curation.md.content_processor.sanskrit_helper
+import doc_curation.utils.sanskrit_helper
 import pandas
 import regex
-from doc_curation.md import library
 
 from subhaashita import Subhaashita
 from indic_transliteration import sanscript
@@ -35,7 +33,7 @@ def import_from_mss_tsv(tsv_path):
   for mss_id in quote_df.index:
     text = str(quote_df.loc[mss_id].quote)
     text = regex.sub(r"। *", "।  \n", text)
-    text = doc_curation.md.content_processor.sanskrit_helper.fix_lazy_anusvaara(text, omit_sam=True, omit_yrl=True, ignore_padaanta=True)
+    text = doc_curation.utils.sanskrit_helper.fix_lazy_anusvaara(text, omit_sam=True, omit_yrl=True, ignore_padaanta=True)
     quote = Subhaashita(variants=[text], secondary_sources=[mss_id], script=sanscript.DEVANAGARI)
     quotes.append(quote)
   return quotes
