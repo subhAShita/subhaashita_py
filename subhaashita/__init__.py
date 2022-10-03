@@ -7,7 +7,7 @@ import methodtools
 import regex
 from bs4 import BeautifulSoup
 from curation_utils import file_helper
-from doc_curation import text_utils
+from doc_curation.utils import text_utils
 from indic_transliteration import deduplication, sanscript, detect
 from sanskrit_data.schema import common
 from sanskrit_data.schema.common import JsonObject
