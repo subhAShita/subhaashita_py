@@ -134,3 +134,26 @@ def set_meters(md_file, dry_run=False):
 
   (metadata, md) = quote.to_metadata_md()
   md_file.dump_to_file(metadata=metadata, content=md, dry_run=dry_run, silent=True)
+
+
+def filter(quotes_path, filter_fn):
+  quotes_dict = library.apply_function(fn=subhaashita.Quote.from_metadata_md_file, dir_path=quotes_path, file_name_filter=lambda x: not os.path.basename(x).startswith("_"))
+  results = {}
+  for quote_path, quote in quotes_dict.items():
+    if filter_fn(quote):
+      results[quote_path] = quote
+  return results
+
+
+def dump_matching(quotes_path, dest_path, meter):
+  def filter_fn(x):
+    selected = True
+    if meter is not None and x.meters is not None:
+      selected &= meter in x.meters
+    return selected
+
+  quotes_dict = filter(quotes_path=quotes_path, filter_fn=filter_fn)
+  content = "\n\n".join([str(x) for x in quotes_dict.values()])
+  dest_md = MdFile(file_path=dest_path)
+  dest_md.dump_to_file(metadata={"title": f"m:{meter}"}, content=content, dry_run=False)
+  pass
