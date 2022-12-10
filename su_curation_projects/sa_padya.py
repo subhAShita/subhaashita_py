@@ -74,9 +74,9 @@ def dump_by_meter():
   # toml_md_db.dump_matching(quotes_path=PATH_DB_SA, meter="उपजाति", dest_path="/home/vvasuki/gitland/sanskrit/tts-corpus/padyam/indravajropajAti/kAvyam/upajAti-subhAShita-db.md")
   # toml_md_db.dump_matching(quotes_path=PATH_DB_SA, meter="इन्द्रवज्रा", dest_path="/home/vvasuki/gitland/sanskrit/tts-corpus/padyam/indravajropajAti/kAvyam/indravajra-subhAShita-db.md")
   # toml_md_db.dump_matching(quotes_path=PATH_DB_SA, meter="आर्या", dest_path="/home/vvasuki/gitland/sanskrit/tts-corpus/padyam/AryA/kAvyam/subhAShita-db.md")
-  # toml_md_db.dump_matching(quotes_path=PATH_DB_SA, meter="अनुष्टुप्", dest_path="/home/vvasuki/gitland/sanskrit/tts-corpus/padyam/anuShTup-shlokaH/kAvyam/subhAShita-db.md")
-  toml_md_db.dump_matching(quotes_path=PATH_DB_SA, meter="वंशस्थ", dest_path="/home/vvasuki/gitland/sanskrit/tts-corpus/padyam/vaMshasthopajAtiH/kAvyam/vaMshastha-subhAShita-db.md")
-  toml_md_db.dump_matching(quotes_path=PATH_DB_SA, meter="हरिणी", dest_path="/home/vvasuki/gitland/sanskrit/tts-corpus/padyam/hariNI/kAvyam/subhAShita-db.md")
+  toml_md_db.dump_matching(quotes_path=PATH_DB_SA, meter="अनुष्टुप् (श्लोक)", dest_path="/home/vvasuki/gitland/sanskrit/tts-corpus/padyam/anuShTup-shlokaH/kAvyam/subhAShita-db.md")
+  # toml_md_db.dump_matching(quotes_path=PATH_DB_SA, meter="वंशस्थ", dest_path="/home/vvasuki/gitland/sanskrit/tts-corpus/padyam/vaMshasthopajAtiH/kAvyam/vaMshastha-subhAShita-db.md")
+  # toml_md_db.dump_matching(quotes_path=PATH_DB_SA, meter="हरिणी", dest_path="/home/vvasuki/gitland/sanskrit/tts-corpus/padyam/hariNI/kAvyam/subhAShita-db.md")
   pass
 
 

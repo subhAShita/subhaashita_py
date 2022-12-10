@@ -147,9 +147,9 @@ def filter(quotes_path, filter_fn):
 
 def dump_matching(quotes_path, dest_path, meter):
   def filter_fn(x):
-    selected = True
+    selected = False
     if meter is not None and x.meters is not None:
-      selected &= meter in x.meters
+      selected |= meter in x.meters
     return selected
 
   quotes_dict = filter(quotes_path=quotes_path, filter_fn=filter_fn)
