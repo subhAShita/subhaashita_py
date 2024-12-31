@@ -10,6 +10,12 @@ from subhaashita import Subhaashita
 
 SUB = "/home/vvasuki/gitland/vishvAsa/kAvyam/content/laxyam/padyam/subhAShitam/subrahmaNya-sangrahaH.md"
 
+def get_verse(text):
+  text = text.split("\n\n")[0]
+  text = regex.sub("(?<=\n|^)> +", "", text)
+  
+  return text
+
 def prep_file(dir_path=SUB):  
   library.apply_function(fn=MdFile.transform, dir_path=dir_path, content_transformer=lambda x, y: ocr_helper.misc_sanskrit_typos(x))
   library.apply_function(fn=MdFile.transform, dir_path=dir_path, content_transformer=lambda x, y: sanskrit_helper.fix_lazy_anusvaara(x), dry_run=False, silent_iteration=False)
@@ -39,15 +45,15 @@ def import_vimuula(md_file, sources=None, secondary_sources=None):
             rating = r
         if rating is not None:
           ratings.append(f"vvasuki:{rating}")
-        content = detail.content.split("\n\n")[0]
-        content = regex.sub("(?<=\n|^)> +", "", content)
-        commentaries["विश्वास-प्रस्तुतिः"] = content
+        commentaries["विश्वास-प्रस्तुतिः"] = get_verse(detail.content)
       elif detail.title.startswith("विषयः"):
         topics = [x.strip() for x in detail.content.split(",")]
       elif detail.title.startswith("स्रोतः"):
         sources_quote = [x.strip() for x in detail.content.split(",")]
       elif detail.title.startswith("मूलम्"):
-        variants.append(detail.content.strip())
+        text = get_verse(detail.content)
+        text = regex.sub("\(.+?\)", "", text)
+        variants.append(text)
       else:
         commentaries[detail.title.strip()] = detail.content.strip()
     if ratings == []:
