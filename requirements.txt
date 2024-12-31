@@ -6,3 +6,4 @@ curation_utils
 doc_curation
 chandas
 sortedcontainers
+lxml
