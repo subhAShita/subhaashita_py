@@ -39,7 +39,9 @@ def import_vimuula(md_file, sources=None, secondary_sources=None):
             rating = r
         if rating is not None:
           ratings.append(f"vvasuki:{rating}")
-        commentaries["विश्वास-प्रस्तुतिः"] = detail.content
+        content = detail.content.split("\n\n")[0]
+        content = regex.sub("(?<=\n|^)> +", "", content)
+        commentaries["विश्वास-प्रस्तुतिः"] = content
       elif detail.title.startswith("विषयः"):
         topics = [x.strip() for x in detail.content.split(",")]
       elif detail.title.startswith("स्रोतः"):

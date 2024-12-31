@@ -5,16 +5,14 @@ from copy import copy
 
 import editdistance
 import regex
-from jaconv.jaconv import consonants
-from sanskrit_data import collection_helper
-from tqdm import tqdm
-
-import chandas
-import subhaashita
 from curation_utils import file_helper
 from doc_curation.md import library
 from doc_curation.md.file import MdFile
 from indic_transliteration import sanscript
+from sanskrit_data import collection_helper
+from tqdm import tqdm
+
+import subhaashita
 
 
 def add(quotes, base_path, dry_run=False):
@@ -74,7 +72,7 @@ def update_indices(quotes_path, dest_path):
   indices = {}
 
   def fix_key(key):
-    key = regex.sub("\(.+?\)", "", key).strip()
+    key = regex.sub(r"\(.+?\)", "", key).strip()
     key = regex.split(" +- *", key)[0]
     return key
 
@@ -90,7 +88,7 @@ def update_indices(quotes_path, dest_path):
     key = os.path.basename(quote_path).replace(".md", "")
 
     # The below works for punctuated devanAgarI as well!
-    first_letter = regex.search("\w", quote.get_text()).group(0)
+    first_letter = regex.search(r"\w", quote.get_text()).group(0)
     if quote._script is not None and first_letter == sanscript.transliterate("ॐ", sanscript.DEVANAGARI, quote._script):
       first_letter = sanscript.transliterate("ओ", sanscript.DEVANAGARI, quote._script)
 

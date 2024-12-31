@@ -157,7 +157,7 @@ class Subhaashita(Quote):
       last_letter = consonants[last_letter_index]
       pratimaalaa_letters.append(last_letter)
     try:
-      first_letter_second_half = regex.search("\w", quote_text.split("।")[-1]).group(0)
+      first_letter_second_half = regex.search(r"\w", quote_text.split("।")[-1]).group(0)
       pratimaalaa_letters.append(first_letter_second_half)
     except AttributeError:
       logging.error(f"{quote_text}")
