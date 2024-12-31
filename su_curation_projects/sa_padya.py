@@ -5,7 +5,7 @@ from doc_curation.md.file import MdFile
 
 from subhaashita import importer, Quote
 from subhaashita.db import toml_md_db
-from subhaashita.importer import subhaashita_ratna_bhaandaagaara, google_sheet
+from subhaashita.importer import subhaashita_ratna_bhaandaagaara, google_sheet, md
 from indic_transliteration import sanscript
 
 PATH_DB_SA = "/home/vvasuki/gitland/sanskrit/raw_etexts/kAvyam/padyam/subhAShitam/db_toml_md__sa__padya/main"
@@ -45,11 +45,18 @@ def dump_dir():
   quotes_dict = library.apply_function(fn=Quote.from_metadata_md_file, dir_path=IMPORT_DIR, file_name_filter=lambda x: not os.path.basename(x).startswith("_"))
   toml_md_db.add(quotes_dict.values(), base_path=PATH_DB_SA)
   importer.empty_import_dir(IMPORT_DIR)
+  toml_md_db.update_indices(quotes_path=PATH_DB_SA, dest_path=os.path.join(os.path.dirname(PATH_DB_SA), "index"))
+
+def dump_md(file_path, sources):
+  quotes = md.import_vimuula(md_file=MdFile(file_path), sources=sources)
+  toml_md_db.add(quotes, base_path=PATH_DB_SA)
+  toml_md_db.update_indices(quotes_path=PATH_DB_SA, dest_path=os.path.join(os.path.dirname(PATH_DB_SA), "index"))
 
 
 def standardize_all():
-  # library.apply_function(fn=toml_md_db.standardize_file, dir_path=PATH_DB_SA, file_name_filter=lambda x: not os.path.basename(x).startswith("_"))
-  library.apply_function(fn=toml_md_db.set_meters, dir_path=PATH_DB_SA, file_name_filter=lambda x: not os.path.basename(x).startswith("_"), dry_run=False)
+  library.apply_function(fn=toml_md_db.standardize_file, dir_path=PATH_DB_SA, file_name_filter=lambda x: not os.path.basename(x).startswith("_"))
+  # library.apply_function(fn=toml_md_db.set_meters, dir_path=PATH_DB_SA, file_name_filter=lambda x: not os.path.basename(x).startswith("_"), dry_run=False)
+  # library.apply_function(fn=toml_md_db.set_pratimaalaa_letters, dir_path=PATH_DB_SA, file_name_filter=lambda x: not os.path.basename(x).startswith("_"), dry_run=False)
 
 
 def dump_sheets():
@@ -83,10 +90,11 @@ def dump_by_meter():
 if __name__ == '__main__':
   # dump_mss()
   # dump_srb()
+  dump_md(file_path="/home/vvasuki/gitland/vishvAsa/kAvyam/content/laxyam/padyam/subhAShitam/kali-viDambanam.md", sources=["नीलकण्ठ-दीक्षितः - कलिविडम्बनम्"])
   # prep_srb()
   # standardize_all()
   # toml_md_db.update_indices(quotes_path=PATH_DB_SA, dest_path=os.path.join(os.path.dirname(PATH_DB_SA), "index"))
-  dump_dir()
+  # dump_dir()
   # dump_sheets()
   # dump_by_meter()
   pass

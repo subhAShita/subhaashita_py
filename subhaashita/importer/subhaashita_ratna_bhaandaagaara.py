@@ -7,14 +7,14 @@ from doc_curation.utils import patterns
 from subhaashita import Subhaashita
 
 
-def from_file(md_file, deduce_from_title="topics"):
+def from_file(md_file, ref_dir_for_ancestral_title,deduce_from_title="topics"):
   (metadata, content) = md_file.read()
-  full_title = md_file.get_title(ref_dir_for_ancestral_title=PATH_SRB)
+  full_title = md_file.get_title(ref_dir_for_ancestral_title=ref_dir_for_ancestral_title)
   content = "\n" + doc_curation.md.content_processor.stripper.remove_non_content_text(content=content)
   matches = regex.findall(patterns.PATTERN_SHLOKA, content)
   quotes = []
   for match in matches:
-    source_descriptor = "सुभाषितरत्नभाण्डागारः// %s// %s" % (full_title, match[1])
+    source_descriptor = "सुभाषितरत्नभाण्डागार - %s// %s" % (full_title, match[1])
     text = match[0] + "॥"
     text = doc_curation.utils.sanskrit_helper.fix_lazy_anusvaara(text, omit_sam=True, omit_yrl=True, ignore_padaanta=True)
     metadata_out = {}

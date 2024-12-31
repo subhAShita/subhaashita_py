@@ -3,6 +3,7 @@ import os
 import sys
 import textwrap
 
+import chandas
 import methodtools
 import regex
 from bs4 import BeautifulSoup
@@ -42,7 +43,7 @@ class CommentaryKey(object):
 
 class Quote(JsonObject):
 
-  def __init__(self, variants, topics=None, sources=None, secondary_sources=None, commentaries=None, types=None, ratings=None, ornaments=None, rasas=None, bhaavas=None, meters=None):
+  def __init__(self, variants, topics=None, sources=None, secondary_sources=None, commentaries=None, types=None, ratings=None, ornaments=None, rasas=None, bhaavas=None, meters=None, pratimaalaa_letters=None):
     self.topics = topics
     self.sources = sources
     self.secondary_sources = secondary_sources
@@ -54,6 +55,7 @@ class Quote(JsonObject):
     self.rasas = rasas
     self.meters = meters
     self.bhaavas = bhaavas
+    self.pratimaalaa_letters = pratimaalaa_letters
     self._script = None
   
   def __repr__(self):
@@ -84,12 +86,16 @@ class Quote(JsonObject):
     metadata["title"] = self.make_title()
     commentaries = self._commentaries
     commentary_order = [CommentaryKey.VISH, CommentaryKey.TEXT, "MT"]
-    commentaries_sorted = [Commentary(name=name, content=commentary) for name, commentary in commentaries.items() if name in commentary_order]
+    commentaries_sorted = []
+    for name in commentary_order: 
+      if name in commentaries:
+        commentaries_sorted.append(Commentary(name=name, content=commentaries[name]))
     commentaries_sorted.extend([Commentary(name=name, content=commentary) for name, commentary in commentaries.items() if name not in commentary_order])
     detail_elements = [commentaries_sorted[0].to_details_tag(attributes="open")]
     if len(commentaries_sorted) > 1:
       detail_elements.extend([commentary.to_details_tag(attributes="") for commentary in commentaries_sorted[1:]])
     md = "\n\n".join(detail_elements)
+    md = regex.sub("\n\n\n*", "\n\n", md)
     return (metadata, md)
 
   @classmethod
@@ -127,6 +133,7 @@ class Subhaashita(Quote):
     super(Subhaashita, self).__init__(variants=variants, topics=topics, sources=sources, secondary_sources=secondary_sources, commentaries=commentaries, types=types, ratings=ratings, ornaments=ornaments, rasas=rasas, bhaavas=bhaavas, meters=meters)
     # Note: This constructor is not called when the object is automatically constructed from a dict.
     self._script=script
+    self.pratimaalaa_letters = None
 
   def get_key(self, max_length=MAX_KEY_LENGTH):
     approx_key = deduplication.get_approx_deduplicating_key(text=self.get_text())
@@ -135,6 +142,43 @@ class Subhaashita(Quote):
   def get_variant_keys(self):
     return [deduplication.get_approx_deduplicating_key(text=x) for x in self.get_variants()]
 
+  def set_pratimaalaa_letters(self):
+    quote_text = self.get_text()
+    consonants = sanscript.SCHEMES[sanscript.DEVANAGARI].get_consonant_letters(quote_text)
+    # logging.debug(md_file)
+    last_letter = consonants[-1]
+    pratimaalaa_letters = [last_letter]
+    if last_letter in "ख-घ-छ-झ-ट-ठ-ड-ढ-ण-ङ-ञ-थ-ष":
+      pratimaalaa_letters.extend("अआइईउऊऋॠऌॡऎएऐऒओऔ")
+  
+    last_letter_index = -1
+    while last_letter in "मत":
+      last_letter_index = last_letter_index - 1
+      last_letter = consonants[last_letter_index]
+      pratimaalaa_letters.append(last_letter)
+    try:
+      first_letter_second_half = regex.search("\w", quote_text.split("।")[-1]).group(0)
+      pratimaalaa_letters.append(first_letter_second_half)
+    except AttributeError:
+      logging.error(f"{quote_text}")
+    self.pratimaalaa_letters = list(set(pratimaalaa_letters))
+
+
+  def set_meters(self):
+    pattern_lines = chandas.to_pattern_lines(self.get_text().split("\n"))
+    id_result = chandas.svat_identifier.IdentifyFromPatternLines(pattern_lines)
+    from sortedcontainers import SortedSet
+  
+    if self.meters is None:
+      meters = SortedSet()
+    else:
+      meters = SortedSet(self.meters)
+    meters = meters.union([sanscript.transliterate(metre.lower(), _from=sanscript.IAST, _to=sanscript.DEVANAGARI) for metre in id_result.get('exact', {}).keys()])
+    if len(meters) == 0:
+      meters.add("UNKNOWN")
+    if len(meters) > 1 and "UNKNOWN" in meters:
+      meters.remove("UNKNOWN")
+    self.meters = list(meters)
 
 # Essential for depickling to work.
 common.update_json_class_index(sys.modules[__name__])
