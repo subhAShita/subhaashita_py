@@ -11,9 +11,9 @@ from subhaashita import Subhaashita
 SUB = "/home/vvasuki/gitland/vishvAsa/kAvyam/content/laxyam/padyam/subhAShitam/subrahmaNya-sangrahaH.md"
 
 def get_verse(text):
-  text = text.split("\n\n")[0]
   text = regex.sub("(?<=\n|^)> +", "", text)
-  
+  text = text.split("\n\n")[0]
+  text = regex.sub("^[‘’\"]+(.+)[‘’\"]+$", r"\1", text)
   return text
 
 def prep_file(dir_path=SUB):  
@@ -28,7 +28,7 @@ def prep_file(dir_path=SUB):
 
 def import_vimuula(md_file, sources=None, secondary_sources=None):
   quotes = []
-  bunches = details_helper.get_detail_bunches(md_file=md_file)
+  bunches = details_helper.get_detail_bunches(md_file=md_file, ignored_titles = "नीलमेघः.*|विस्तारः.+")
   for bunch in bunches:
     ratings = []
     topics = None
